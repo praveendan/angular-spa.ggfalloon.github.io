@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+    <title>G's Angular App</title>
 </head>
-<body>
+<body ng-app="myAngApp">
     <h1>Hello World</h1>
+    <div ng-controller="MyController">
+        <div>
+            Your name: 
+            <input type="text" ng-model="name" ng-keyup="displayNum();">
+        </div>
+        <div>Total Numberic Value of Name: {{totalValue}}</div>
+
+    </div>
+    
 </body>
 </html>
