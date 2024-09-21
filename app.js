@@ -3,22 +3,31 @@
 
 angular.module('myAngApp', [])
 
-.controller('MyController', function ($scope) {
-$scope.name =  '';
-$scope.totalValue = 0;
+.controller('MyController',  MyController);
 
-$scope.displayNum = function () {
-    var totalNameValue = calcNumForString($scope.name);
-    $scope.totalValue = totalNameValue;
-};
+MyController.$inject = [$scope, $filter]
 
-function calcNumForString(str) {
-    var totalStrVal = 0;
-    for (var i = 0; i < str.length; i++) {
-        totalStrVal += str.charCodeAt(i);
+function MyController ($scope, $filter) {
+    $scope.name =  '';
+    $scope.totalValue = 0;
+
+    $scope.upper = function () {
+        var upCase = $filter('uppercase');
+        $scope.name = upCase($scope.name);
+    };
+
+    $scope.displayNum = function () {
+        var totalNameValue = calcNumForString($scope.name);
+        $scope.totalValue = totalNameValue;
+    };
+
+    function calcNumForString(str) {
+        var totalStrVal = 0;
+        for (var i = 0; i < str.length; i++) {
+            totalStrVal += str.charCodeAt(i);
+        }
+        return totalStrVal;
     }
-    return totalStrVal;
-}
 
-    });
+    };
 })();

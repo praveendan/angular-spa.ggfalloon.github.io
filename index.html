@@ -12,7 +12,7 @@
     <div ng-controller="MyController">
         <div>
             Your name: 
-            <input type="text" ng-model="name" ng-keyup="displayNum();">
+            <input type="text" ng-model="name" ng-keyup="displayNum();" ng-blur="upper();">
         </div>
         <div>Total Numberic Value of Name: {{totalValue}}</div>
 
