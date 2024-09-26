@@ -14,19 +14,6 @@
         toBuy.boughtItem = function (itemIndex, item) {
             ShoppingListCheckoffService.boughtItem(itemIndex, item);
          };
-
-        //  toBuy.checkEmpty = function () {
-        //     if (toBuy.toBuyItems.length === 0)
-        //         return true
-        //  }
-
-        //  list.addItem = function () {
-        //     try {
-        //       ShoppingList.addItem(list.itemName, list.itemQuantity);
-        //     } catch (error) {
-        //       list.errorMessage = error.message;
-        //     }
-        //   };
     }
     
     
@@ -43,7 +30,6 @@
       var service = this;
     
       // List of shopping items
-
       var toBuyItems = [
         {
             name: "Flour",
@@ -74,17 +60,13 @@
       }
 
       service.boughtItem = function (index, item) {
-        console.log(item)
             var item = {
                 name: item.name,
                 quantity: item.quantity
             };
             toBuyItems.splice(index, 1)
             boughtItems.push(item)
-            console.log(boughtItems)
-            console.log(toBuyItems)
             getBoughtItems();
-        
       };
 
       service.showBoughtItems = function () {
