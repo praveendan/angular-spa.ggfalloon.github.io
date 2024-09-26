@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('ShoppingListCheckoff', [])
+    angular.module('ShoppingListCheckoff', ['ngRoute'])
     .controller('ToBuyController', ToBuyItemsController)
     .controller('AlreadyBoughtController', AlreadyBoughtController)
     .service('ShoppingListCheckoffService', ShoppingListCheckoffService);
@@ -10,6 +10,23 @@
     function ToBuyItemsController(ShoppingListCheckoffService) {
         var toBuy = this;
         toBuy.toBuyItems = ShoppingListCheckoffService.getToBuyItems();
+
+        toBuy.boughtItem = function (itemIndex, item) {
+            ShoppingListCheckoffService.boughtItem(itemIndex, item);
+         };
+
+        //  toBuy.checkEmpty = function () {
+        //     if (toBuy.toBuyItems.length === 0)
+        //         return true
+        //  }
+
+        //  list.addItem = function () {
+        //     try {
+        //       ShoppingList.addItem(list.itemName, list.itemQuantity);
+        //     } catch (error) {
+        //       list.errorMessage = error.message;
+        //     }
+        //   };
     }
     
     
@@ -17,11 +34,8 @@
     function AlreadyBoughtController(ShoppingListCheckoffService) {
       var bought = this;
     
-      bought.boughtItems = ShoppingListCheckoffService.getBoughtItems();
-    
-    //   showList.removeItem = function (itemIndex) {
-    //     ShoppingListService.removeItem(itemIndex);
-    //   };
+      bought.boughtItems = ShoppingListCheckoffService.showBoughtItems();
+   
     }
     
     
@@ -29,6 +43,7 @@
       var service = this;
     
       // List of shopping items
+
       var toBuyItems = [
         {
             name: "Flour",
@@ -58,20 +73,27 @@
         return toBuyItems;
       }
 
-      service.getBoughtItems = function () {
+      service.boughtItem = function (index, item) {
+        console.log(item)
+            var item = {
+                name: item.name,
+                quantity: item.quantity
+            };
+            toBuyItems.splice(index, 1)
+            boughtItems.push(item)
+            console.log(boughtItems)
+            console.log(toBuyItems)
+            getBoughtItems();
+        
+      };
+
+      service.showBoughtItems = function () {
         return boughtItems;
       };
 
-      service.boughtItem = function (itemIndex) {
-        toBuyItems.splice(itemIndex, 1)
-        boughtItems.push(itemIndex);
-      };
-    
-    //   service.removeItem = function (itemIndex) {
-    //     items.splice(itemIndex, 1);
-    //   };
-    
-      
+      function getBoughtItems() {
+        return boughtItems;
+    }
     }
     
     })();
