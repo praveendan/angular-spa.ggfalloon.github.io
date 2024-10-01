@@ -70,7 +70,7 @@
       };
 
       service.showBoughtItems = function () {
-        return boughtItems;
+        return getBoughtItems();
       };
 
       function getBoughtItems() {
