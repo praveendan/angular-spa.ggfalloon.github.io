@@ -4,14 +4,13 @@
     angular.module('NarrowItDownApp', [])
     .controller('NarrowItDownController', NarrowItDownController)
     .service('MenuSearchService', MenuSearchService)
-    .directive('foundItems', FoundItemsDirective);
-
-    var url = "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"
+    .directive('foundItems', FoundItemsDirective)
+    .constant('ApiBasePath', "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json");;
 
     function FoundItemsDirective (){
         var ddo = {
                 scope: {
-                    found: '<',
+                    foundItems: '<',
                     onRemove: '&'
                 },
                 controller: NarrowItDownController,
@@ -24,26 +23,63 @@
     
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
-        var found = this;
-        found.foundItems = MenuSearchService.getMatchedMenuItems(searchStr);
+        var list = this;
 
+        list.showMenuItems = function (search) {
+          var promise = MenuSearchService.getMatchedMenuItems(search);
+        promise.then(function (response) {
+          console.log(response)
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+        };
+
+        // list.items = MenuSearchService.displayMenuItems();
+
+        // list.onRemove = MenuSearchService.onRemove()
     }
     
-    
-    function MenuSearchService() {
+    MenuSearchService.$inject = ['$http', 'ApiBasePath'];
+    function MenuSearchService($http, ApiBasePath) {
       var service = this;
 
+      var foundItems = []
+      var filteredItems = []
+
       service.getMatchedMenuItems = function (searchTerm) {
-            // to do
-
-        // return $http(...).then(function (result) {
-        //     // process result and only keep items that match
-        //     var foundItems...
-        
-        //     // return processed items
-        //     return foundItems;
-        // });
+        var response = $http({
+            method: "GET",
+            url: ApiBasePath,
+        }).then(function (result) {
+          var processedItems = Object.values(result.data)
+          processedItems.forEach(pi => {
+            var menuItems = pi.menu_items
+            filteredItems.push(...menuItems)
+          })
+          // process result and only keep items that match
+          for (var i = 0; i < filteredItems.length; i++) {
+            var description = filteredItems[i].description;
+            if (description.toLowerCase().indexOf(searchTerm) !== -1) {
+              var item = {
+                name: filteredItems[i].name,
+                shortName: filteredItems[i].short_name,
+                description: filteredItems[i].description
+                };
+              foundItems.push(item)
+            }
+          }
+          return foundItems
+         });
+         return response
       };
-    }
 
+      // service.removeItem = function (itemIndex) {
+      //   foundItems.splice(itemIndex, 1)
+      // }
+      
+      // service.displayMenuItems = function () {
+      //   return foundItems
+      // }
+    }
     })();
