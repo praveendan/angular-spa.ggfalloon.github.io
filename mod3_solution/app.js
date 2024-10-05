@@ -24,15 +24,19 @@
     NarrowItDownController.$inject = ['MenuSearchService'];
     function NarrowItDownController(MenuSearchService) {
         var list = this;
+        list.items = []
 
         list.showMenuItems = function (search) {
           var promise = MenuSearchService.getMatchedMenuItems(search);
-        promise.then(function (response) {
+          promise.then(function (response) {
           console.log(response)
+          list.items = response
         })
         .catch(function (err) {
           console.log(err);
-        });
+          list.items = []
+        })
+        .finally(_ => console.log(this));
         };
 
         // list.items = MenuSearchService.displayMenuItems();
@@ -44,10 +48,9 @@
     function MenuSearchService($http, ApiBasePath) {
       var service = this;
 
-      var foundItems = []
-      var filteredItems = []
-
       service.getMatchedMenuItems = function (searchTerm) {
+        var foundItems = []
+        var filteredItems = []
         var response = $http({
             method: "GET",
             url: ApiBasePath,
